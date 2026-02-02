@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { BottomNav, TabType } from "@/components/BottomNav";
 import { MediaCard } from "@/components/MediaCard";
-import { VideoModal } from "@/components/VideoModal";
-import { PhotoModal } from "@/components/PhotoModal";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { EmptyState } from "@/components/EmptyState";
 import { useMediaStore } from "@/hooks/useMediaStore";
@@ -18,6 +17,7 @@ import {
 } from "@/lib/pexels";
 
 export default function Index() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>("home");
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,7 +25,6 @@ export default function Index() {
   const [items, setItems] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
 
   const { savedItems, saveItem, unsaveItem, isSaved, toggleLike, isLiked } =
     useMediaStore();
@@ -184,7 +183,7 @@ export default function Index() {
                   isSaved={isSaved(item.id, item.type)}
                   onLike={() => toggleLike(item.id)}
                   onSave={() => handleSaveToggle(item)}
-                  onClick={() => setSelectedItem(item)}
+                  onClick={() => navigate(`/pin/${item.type}/${item.id}`)}
                 />
               ))}
             </div>
@@ -195,29 +194,6 @@ export default function Index() {
       </main>
 
       <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
-
-      {/* Modals */}
-      {selectedItem?.type === "video" && (
-        <VideoModal
-          item={selectedItem}
-          isLiked={isLiked(selectedItem.id)}
-          isSaved={isSaved(selectedItem.id, selectedItem.type)}
-          onLike={() => toggleLike(selectedItem.id)}
-          onSave={() => handleSaveToggle(selectedItem)}
-          onClose={() => setSelectedItem(null)}
-        />
-      )}
-
-      {selectedItem?.type === "photo" && (
-        <PhotoModal
-          item={selectedItem}
-          isLiked={isLiked(selectedItem.id)}
-          isSaved={isSaved(selectedItem.id, selectedItem.type)}
-          onLike={() => toggleLike(selectedItem.id)}
-          onSave={() => handleSaveToggle(selectedItem)}
-          onClose={() => setSelectedItem(null)}
-        />
-      )}
     </div>
   );
 }

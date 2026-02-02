@@ -75,8 +75,10 @@ export async function getPopularVideos(page = 1, perPage = 10): Promise<Video[]>
 }
 
 export async function searchPhotos(query: string, page = 1, perPage = 20): Promise<Photo[]> {
+  // Add safe search terms to filter adult content
+  const safeQuery = `${query} -nude -naked -adult -nsfw -sexy`;
   const res = await fetch(
-    `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}`,
+    `https://api.pexels.com/v1/search?query=${encodeURIComponent(safeQuery)}&page=${page}&per_page=${perPage}`,
     { headers }
   );
   const data = await res.json();
@@ -84,8 +86,10 @@ export async function searchPhotos(query: string, page = 1, perPage = 20): Promi
 }
 
 export async function searchVideos(query: string, page = 1, perPage = 10): Promise<Video[]> {
+  // Add safe search terms to filter adult content
+  const safeQuery = `${query} -nude -naked -adult -nsfw -sexy`;
   const res = await fetch(
-    `https://api.pexels.com/videos/search?query=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}`,
+    `https://api.pexels.com/videos/search?query=${encodeURIComponent(safeQuery)}&page=${page}&per_page=${perPage}`,
     { headers }
   );
   const data = await res.json();
