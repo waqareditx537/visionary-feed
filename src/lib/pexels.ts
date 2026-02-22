@@ -1,5 +1,11 @@
 const PEXELS_API_KEY = "mNLXXMu2HeJ2ISqziN9GZeFC1HsQuLmP0LVh2aBY5Z50jmFlojrr34Ou";
 
+const NSFW_KEYWORDS = [
+  "nude", "naked", "adult", "nsfw", "sexy", "erotic", "porn",
+  "xxx", "bikini", "lingerie", "boudoir", "sensual", "provocative",
+  "seductive", "topless", "underwear", "18+", "mature"
+];
+
 export interface Photo {
   id: number;
   width: number;
@@ -75,8 +81,9 @@ export async function getPopularVideos(page = 1, perPage = 10): Promise<Video[]>
 }
 
 export async function searchPhotos(query: string, page = 1, perPage = 20): Promise<Photo[]> {
-  // Add safe search terms to filter adult content
-  const safeQuery = `${query} -nude -naked -adult -nsfw -sexy`;
+  // Block NSFW queries entirely
+  if (NSFW_KEYWORDS.some(kw => query.toLowerCase().includes(kw))) return [];
+  const safeQuery = `${query} -nude -naked -adult -nsfw -sexy -erotic -porn -xxx -bikini -lingerie`;
   const res = await fetch(
     `https://api.pexels.com/v1/search?query=${encodeURIComponent(safeQuery)}&page=${page}&per_page=${perPage}`,
     { headers }
@@ -86,8 +93,8 @@ export async function searchPhotos(query: string, page = 1, perPage = 20): Promi
 }
 
 export async function searchVideos(query: string, page = 1, perPage = 10): Promise<Video[]> {
-  // Add safe search terms to filter adult content
-  const safeQuery = `${query} -nude -naked -adult -nsfw -sexy`;
+  if (NSFW_KEYWORDS.some(kw => query.toLowerCase().includes(kw))) return [];
+  const safeQuery = `${query} -nude -naked -adult -nsfw -sexy -erotic -porn -xxx -bikini -lingerie`;
   const res = await fetch(
     `https://api.pexels.com/videos/search?query=${encodeURIComponent(safeQuery)}&page=${page}&per_page=${perPage}`,
     { headers }
