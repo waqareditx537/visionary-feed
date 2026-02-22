@@ -20,6 +20,7 @@ import {
   searchPixabayVideos,
   getPopularPixabayImages,
 } from "@/lib/pixabay";
+import { getRandomPicsumPhotos } from "@/lib/lorem-picsum";
 
 export default function Index() {
   const navigate = useNavigate();
@@ -67,26 +68,30 @@ export default function Index() {
           ...pixabayVids,
         ];
       } else if (activeTab === "home" || activeTab === "search") {
-        const [photos, videos, pixabayPhotos] = await Promise.all([
+        const [photos, videos, pixabayPhotos, picsumPhotos] = await Promise.all([
           getCuratedPhotos(currentPage),
           getPopularVideos(currentPage),
           getPopularPixabayImages(currentPage),
+          getRandomPicsumPhotos(currentPage),
         ]);
         newItems = [
           ...photos.map(photoToMediaItem),
           ...videos.map(videoToMediaItem),
           ...pixabayPhotos,
+          ...picsumPhotos,
         ];
       } else if (activeTab === "trending") {
-        const [photos, videos, pixabayPhotos] = await Promise.all([
+        const [photos, videos, pixabayPhotos, picsumPhotos] = await Promise.all([
           getCuratedPhotos(currentPage, 30),
           getPopularVideos(currentPage, 15),
           getPopularPixabayImages(currentPage, 15),
+          getRandomPicsumPhotos(currentPage, 10),
         ]);
         newItems = [
           ...photos.map(photoToMediaItem),
           ...videos.map(videoToMediaItem),
           ...pixabayPhotos,
+          ...picsumPhotos,
         ];
       }
 
