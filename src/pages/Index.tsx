@@ -15,6 +15,11 @@ import {
   photoToMediaItem,
   videoToMediaItem,
 } from "@/lib/pexels";
+import {
+  searchPixabayImages,
+  searchPixabayVideos,
+  getPopularPixabayImages,
+} from "@/lib/pixabay";
 
 export default function Index() {
   const navigate = useNavigate();
@@ -48,31 +53,40 @@ export default function Index() {
       let newItems: MediaItem[] = [];
 
       if (activeTab === "search" && debouncedQuery.length >= 2) {
-        const [photos, videos] = await Promise.all([
+        // Search both Pexels and Pixabay
+        const [photos, videos, pixabayPhotos, pixabayVids] = await Promise.all([
           searchPhotos(debouncedQuery, currentPage),
           searchVideos(debouncedQuery, currentPage),
+          searchPixabayImages(debouncedQuery, currentPage),
+          searchPixabayVideos(debouncedQuery, currentPage, 5),
         ]);
         newItems = [
           ...photos.map(photoToMediaItem),
           ...videos.map(videoToMediaItem),
+          ...pixabayPhotos,
+          ...pixabayVids,
         ];
       } else if (activeTab === "home" || activeTab === "search") {
-        const [photos, videos] = await Promise.all([
+        const [photos, videos, pixabayPhotos] = await Promise.all([
           getCuratedPhotos(currentPage),
           getPopularVideos(currentPage),
+          getPopularPixabayImages(currentPage),
         ]);
         newItems = [
           ...photos.map(photoToMediaItem),
           ...videos.map(videoToMediaItem),
+          ...pixabayPhotos,
         ];
       } else if (activeTab === "trending") {
-        const [photos, videos] = await Promise.all([
+        const [photos, videos, pixabayPhotos] = await Promise.all([
           getCuratedPhotos(currentPage, 30),
           getPopularVideos(currentPage, 15),
+          getPopularPixabayImages(currentPage, 15),
         ]);
         newItems = [
           ...photos.map(photoToMediaItem),
           ...videos.map(videoToMediaItem),
+          ...pixabayPhotos,
         ];
       }
 
@@ -114,7 +128,7 @@ export default function Index() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, activeTab]);
 
@@ -162,7 +176,7 @@ export default function Index() {
         }}
       />
 
-      <main className="px-3 py-4 max-w-7xl mx-auto">
+      <main className="px-2 sm:px-3 py-3 sm:py-4 max-w-7xl mx-auto">
         {activeTab === "downloads" ? (
           <EmptyState type="downloads" />
         ) : activeTab === "saved" && savedItems.length === 0 ? (

@@ -150,9 +150,9 @@ export default function PinDetail() {
         </div>
       </header>
 
-      <main className="pt-16 pb-8">
+      <main className="pt-14 pb-8">
         {/* Pin Detail Card */}
-        <div className="max-w-4xl mx-auto px-4 py-6">
+        <div className="max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
           <div className="bg-card rounded-2xl overflow-hidden shadow-2xl">
             {/* Media */}
             <div className="relative bg-black">
@@ -161,81 +161,81 @@ export default function PinDetail() {
                   src={item.downloadUrl}
                   poster={item.preview}
                   controls
-                  className="w-full max-h-[70vh] object-contain"
+                  playsInline
+                  className="w-full max-h-[60vh] sm:max-h-[70vh] object-contain"
                 />
               ) : (
                 <img
                   src={item.downloadUrl}
                   alt={`Photo by ${item.photographer}`}
-                  className="w-full max-h-[70vh] object-contain"
+                  className="w-full max-h-[60vh] sm:max-h-[70vh] object-contain"
                 />
               )}
 
-              {/* Type badge */}
               {item.type === "video" && (
-                <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                  <Play className="w-4 h-4 fill-primary text-primary" />
-                  <span className="text-sm font-medium">Video</span>
+                <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-background/80 backdrop-blur-sm px-2.5 py-1 rounded-full">
+                  <Play className="w-3.5 h-3.5 fill-primary text-primary" />
+                  <span className="text-xs font-medium">Video</span>
                 </div>
               )}
             </div>
 
             {/* Details */}
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {/* Photographer info */}
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-bold text-lg">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full gradient-primary flex items-center justify-center text-white font-bold text-base sm:text-lg shrink-0">
                   {item.photographer.charAt(0).toUpperCase()}
                 </div>
-                <div>
-                  <h2 className="font-semibold text-foreground">{item.photographer}</h2>
-                  <p className="text-sm text-muted-foreground">Content Creator</p>
+                <div className="min-w-0">
+                  <h2 className="font-semibold text-foreground truncate">{item.photographer}</h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Content Creator</p>
                 </div>
               </div>
 
-              {/* Title/Description */}
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold text-foreground mb-2">
+              {/* Title */}
+              <div className="mb-5">
+                <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-1">
                   {item.type === "video" ? "Video" : "Photo"} by {item.photographer}
                 </h3>
-                <p className="text-muted-foreground">
-                  Beautiful {item.type} content available for download. High quality media from Pexels.
+                <p className="text-sm text-muted-foreground">
+                  High quality {item.type} content available for download.
                 </p>
               </div>
 
-              {/* Actions */}
-              <div className="flex flex-wrap items-center gap-3">
+              {/* Actions - mobile optimized grid */}
+              <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3">
                 <button
                   onClick={() => toggleLike(item.id)}
                   className={cn(
-                    "flex items-center gap-2 px-5 py-2.5 rounded-full transition-all font-medium",
+                    "flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all font-medium text-sm active:scale-95",
                     isLiked(item.id)
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-foreground hover:bg-muted"
                   )}
                 >
-                  <Heart className={cn("w-5 h-5", isLiked(item.id) && "fill-current")} />
+                  <Heart className={cn("w-4 h-4", isLiked(item.id) && "fill-current")} />
                   <span>Like</span>
                 </button>
 
                 <button
                   onClick={handleSaveToggle}
                   className={cn(
-                    "flex items-center gap-2 px-5 py-2.5 rounded-full transition-all font-medium",
+                    "flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all font-medium text-sm active:scale-95",
                     isSaved(item.id, item.type)
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary text-foreground hover:bg-muted"
                   )}
                 >
-                  <Bookmark className={cn("w-5 h-5", isSaved(item.id, item.type) && "fill-current")} />
+                  <Bookmark className={cn("w-4 h-4", isSaved(item.id, item.type) && "fill-current")} />
                   <span>Save</span>
                 </button>
 
                 <button
                   onClick={handleDownload}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all font-medium"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all font-medium text-sm active:scale-95"
                 >
-                  <Download className="w-5 h-5" />
+                  <Download className="w-4 h-4" />
                   <span>Download</span>
                 </button>
 
@@ -243,10 +243,10 @@ export default function PinDetail() {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-secondary text-foreground hover:bg-muted transition-all font-medium"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-secondary text-foreground hover:bg-muted transition-all font-medium text-sm active:scale-95"
                 >
-                  <ExternalLink className="w-5 h-5" />
-                  <span>View on Pexels</span>
+                  <ExternalLink className="w-4 h-4" />
+                  <span>Source</span>
                 </a>
               </div>
             </div>
