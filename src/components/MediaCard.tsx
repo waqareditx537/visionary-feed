@@ -57,9 +57,9 @@ export function MediaCard({
         )}
 
         {/* Source badge */}
-        {(item as any).source === "pixabay" && (
+        {item.source && (
           <div className="absolute top-2.5 right-2.5 bg-background/80 backdrop-blur-sm px-2 py-0.5 rounded-full">
-            <span className="text-[10px] font-semibold text-muted-foreground">Pixabay</span>
+            <span className="text-[10px] font-semibold text-muted-foreground">{item.source}</span>
           </div>
         )}
 
